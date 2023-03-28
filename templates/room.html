@@ -1,52 +1,46 @@
-{% extends 'base.html' %}  <!--Extend from the base HTML file-->
-
-{% block content %}   <!--Create a block named content-->
-<div class="message-box">    <!--Create a div with class message-box-->
-    <h2>Chat Room: {{code}}</h2>    <!--Display the chat room code-->
-    <div class="messages" id="messages"></div>   <!--Create a div to display messages-->
-    <div class="inputs">  <!--Create a div for inputs-->
-        <input type="text" rows="3" placeholder="Message" name="message" id="message"/>  <!--Create a text input for the message-->
-        <button type="button" name="send" id="send-btn" onClick="sendMessage()">Send</button>  <!--Create a button to send the message-->
+{% extends 'base.html' %}
+{% block content %}
+<div class="message-box">
+    <h2>Chat Room: {{code}}</h2>
+    <div class="messages" id="messages"></div>
+    <div class="inputs">
+        <input type="text" rows="3" placeholder="Message" name="message" id="message"/>
+        <button type="button" name="send" id="send-btn" onClick="sendMessage()">Send</button>
     </div>
 </div>
-
-<!--Create a script to listen to messages from the server and create a message for each message received-->
 <script type="text/javascript">
-    var socketio = io();   //Create a new instance of SocketIO
+    var socketio = io();
 
-    const messages = document.getElementById("messages")  //Get the div for displaying messages
+    const messages = document.getElementById("messages")
 
-    const createMessage = (name, msg) => {  //Function to create a message
+    const createMessage = (name, msg) => {
         const content = `
         <div class="text">
              <span>
                 <strong>${name}</strong>: ${msg}   
              </span>
              <span class="muted">
-                ${new Date().toLocaleString()}   
+                ${new Date().toLocaleString()}
              </span>   
         </div>
         `;
-        messages.innerHTML += content;  //Add the message to the messages div
+        messages.innerHTML += content;
     };
 
-    socketio.on("message", (data) => {   //Listen for messages from the server
-        createMessage(data.name, data.message);  //Call the createMessage function to create a message for the received data
+    socketio.on("message", (data) => {
+        createMessage(data.name, data.message);
     });
 
-    const sendMessage = () => {   //Function to send a message
-        const message = document.getElementById("message")  //Get the input for the message
-        if (message.value == "") return;  //Return if message is empty
-        socketio.emit("message", {data: message.value})  //Emit the message to the server
-        message.value = "";   //Clear the input field
+    const sendMessage = () => {
+        const message = document.getElementById("message")
+        if (message.value == "") return;
+        socketio.emit("message", {data: message.value})
+        message.value = "";
     };
 </script>
-
-<!--Loop through the messages and create a message for each one-->
 {% for msg in messages%}
 <script type="text/javascript">
-    createMessage("{{msg.name}}", "{{msg.message}}")  //Call the createMessage function to create a message for each message
+    createMessage("{{msg.name}}", "{{msg.message}}")
 </script>
 {% endfor %}
-
-{% endblock %}   <!--Close the content block-->
+{% endblock %} 
