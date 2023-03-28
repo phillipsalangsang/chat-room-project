@@ -96,7 +96,7 @@ def disconnect():
         if rooms[room]["members"] <= 0:
             del rooms[room]
 
-    send({"name": name, "message": "has entered the room"}, to=room)
+    send({"name": name, "message": "has exited the room"}, to=room)
     print(f"{name} has exited the room {room}")            
 
 if __name__ == "__main__":
