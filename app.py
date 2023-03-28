@@ -22,6 +22,7 @@ def generate_unique_code(length):
 
 @app.route("/", methods=["POST", "GET"])
 def home():
+    session.clear()
     if request.method == "POST":
         name = request.form.get("name")
         code = request.form.get("code")
@@ -29,14 +30,20 @@ def home():
         create = request.form.get("create", False)
 
         if not name:
-            return render_template("home.html", error= "Enter a name.")
+            return render_template("home.html", error= "Enter a name.", code=code, name=name)
 
         if join != False and not code:
-            return render_template("home.html", error="Enter valid room code.")
+            return render_template("home.html", error="Enter valid room code.", code=code, name=name)
         
         room = code
         if create != False:
             room = generate_unique_code(4)
+            rooms[room] = {"members": 0, "messages": []}
+        elif code not in rooms:
+            return render_template("home.html", error="Invalid Room.", code=code, name=name)
+
+        session["room"] = room
+        session["name"] = name
 
     return render_template("home.html")
 
