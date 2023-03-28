@@ -54,7 +54,7 @@ def room():
     if room is None or session.get("name") is None or room not in rooms:
         return redirect(url_for("home"))
 
-    return render_template("room.html", code=room)
+    return render_template("room.html", code=room, messages=rooms[room]["messages"])
 
 @socketio.on("message")
 def message (data):
@@ -101,3 +101,7 @@ def disconnect():
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
+
+
+# when server restarts you will lose history because it's being stored in RAM - stretch goal use 
+# database to store the message history
