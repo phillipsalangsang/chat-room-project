@@ -71,5 +71,7 @@ def connect(auth):
     rooms[room]["members"] += 1
     print(f"{name} has joined the room {room}")
 
+    
+
 if __name__ == "__main__":
     socketio.run(app, debug=True)
